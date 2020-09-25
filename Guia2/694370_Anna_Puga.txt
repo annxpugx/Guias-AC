@@ -1,0 +1,298 @@
+Guia 2
+694370 - Anna Puga Campos Rodrigues
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+QUESTÃO 1
+
+a.) 0,11011(2) = 1/2 + 1/4 + 1/16 + 1/32 = (16+8+2+1)/32 = 0,84(10)
+b.) 0,01110(2) = 1/4 + 1/8 + 1/16 = (4+2+1)/16 = 0,43(10)
+c.) 0,01001(2) = 1/4 + 1/32 = (8+1)/32 = 0,28(10)
+d.) 1,01011(2) = 1/4 + 1/16 + 1/32 = (8+2+1)/32 = 1,34(10)
+e.) 11,10010(2) = 1/2 + 1/16 = (8+1)/16 = 3,56(10)
+
+--------------------------------------------------------------------------
+1.a) JAVA
+public class Ex1 {
+    public static double bin2double(String x) { 
+        String[] separado = x.split(",", 2);
+        int inteiro = Integer.parseInt(separado[0]);
+        int decimal = Integer.parseInt(separado[1]);
+        int somaInt = 0;
+        int mult;
+        double pot;
+        double somaDec = 0;
+
+        for(int i = 0; i < separado[0].length(); i++, inteiro /= 10){
+            mult = inteiro % 10;
+            pot = Math.pow(2, i);
+            somaInt += (mult * pot);
+        }
+
+        for(int i = 0, j = separado[1].length(); i < separado[1].length(); i++, decimal /= 10, j--){
+            mult = decimal % 10;
+            pot = Math.pow(2, -1*j);
+            somaDec += (mult * pot);
+        }
+
+        //System.out.println(somaDec);
+        double B10 = somaInt + somaDec;
+        return B10;
+
+    }
+
+    public static void main(final String[] args) {
+        String[] bin = { "0,11011", "0,01110", "0,01001", "1,01011", "11,10010"};
+
+        for (int i = 0; i < bin.length; i++) {
+            System.out.println(bin[i] + "[2] = " + bin2double(bin[i]) + "[10]");
+        }
+    }
+}
+
+------------------------------------------------------------------------
+1.c) VERILOG
+module Guia_0201;
+// define data
+real x = 0 ; // decimal
+real power2 = 1.0; // power of 2
+integer y = 7 ; // counter
+integer i = 0;
+reg [7:0] b [0:4]; 
+ // binary (only fraction part, Big Endian)
+// actions
+initial
+begin : main
+
+b[0] = 8'b11011000;
+b[1] = 8'b01110000;
+b[2] = 8'b01001000;
+b[3] = 8'b01011000;
+b[4] = 8'b10010000;
+
+while (i <= 4)
+begin
+x = 0;
+power2 = 1;
+y = 7;
+    while(y >= 0)
+    begin
+    power2 = power2 / 2.0;
+    if ( b[i][y] == 1 )
+        begin
+            x = x + power2;
+            $display ( "x = %f", x );
+        end
+    y = y-1;
+    end
+    $display ( "FIM" );
+    i = i+1;
+end // end while
+end // main
+endmodule // Guia_0201
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+QUESTÃO 2
+
+a.) 0,62500(10) = 0,625 * 2 = [1] + 0,25 => 0,25 * 2 = [0] + 0,5 => 0,5 * 2 = [1] + 0 => 0,101 (2)
+b.) 0,81250 (10) = 0,8125 * 2 = [1] + 0,625 => 0,1101 (2)
+c.) 1,75000 (10) = 0,75 * 2 = [1] + 0,5 => 1,11 (2)
+d.) 3,25000 (10) = 11,01(2)
+e.) 14, 015625 (10) = 14%2 = 0 => 7%2 = 1 => 3%2 = 1 => 1%2 = 1 => 1110 
++ 0,015625*2 = [0] + 0,03125*2 = [0] + 0,0625 + [00] + 0,25 => 0000 01 => 1110,0000 01 (2)
+------------------------------------------------------------------------
+
+2.a) JAVA
+public class Ex2a {
+    public static String double2bin(double x){
+        int inteiro = (int) x;
+        int[] intBin = new int[4];
+        int[] decBin = new int[8];
+        double decimal = x - inteiro;
+        double aux;
+        
+        for(int i = intBin.length-1; inteiro > 0; inteiro = inteiro/2, i--){ //invertendo a posição do vetor que guarda os 
+            intBin[i] = inteiro % 2;                                           //restos que formam o numero binario
+        }
+
+        for(int i = 0; i < decBin.length; i++){
+            aux = (decimal * 2);
+            decBin[i] = (int) aux;
+            decimal = aux - (int)aux;
+        }
+
+        String resposta = "";
+        int i;
+
+        for(i = 0; i < intBin.length; i++){
+            resposta += intBin[i];
+        }
+        resposta += ",";
+        for(i = 0; i < decBin.length; i++){
+            resposta += decBin[i];
+        }
+
+        return resposta;
+    }
+
+    public static void main(String[] args){
+        double[] dec = {0.62500, 0.81250, 1.75000, 3.25000, 14.015625};
+        
+        for(int i = 0; i < dec.length; i++){
+            System.out.println(dec[i] + "[10] = " + double2bin(dec[i]) + "[2]");
+        }
+    }
+}
+------------------------------------------------------------------------
+2.c) VERILOG
+
+/*
+Guia_0202
+*/
+module Guia_0202;
+// define data
+integer y = 4 ; // counter
+real x [0:4];
+reg [7:0] b [0:4];
+integer i = 0;
+real keep;
+// actions
+initial
+begin : main
+x[0] = 0.62500;
+x[1] = 0.81250;
+x[2] = 0.75000;
+x[3] = 0.25000;
+x[4] = 0.015625;
+while (i <= 4)
+begin    
+    y = 7;
+    while (y >= 0 && x[i] > 0)
+    begin
+        if ( x[i]*2 >= 1 )
+            begin
+            b[i][y] = 1;
+            x[i] = x[i]*2.0 - 1.0;
+            end
+        else
+            begin
+            b[i][y] = 0;
+            x[i] = x[i]*2.0;
+            end // end if
+    y=y-1;
+    end // end while;
+    $display ( "b = 0,%b[2]", b[i] );
+    i = i + 1;
+end
+end // main
+endmodule // Guia_0202
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+QUESTÃO 3
+Fazer as conversões de base entre as bases indicadas:
+DICAS: Para uma mesma base ou usar agrupamentos ou desagrupamentos.
+Para conferir, compare os valores decimais equivalentes.
+Completar com zeros, se necessário
+
+a.) 0,111100(2) = 0,330(4) -> 0.9375(10)
+b.) 0,101001(2) = 0,51(8)
+c.) 0,101110[00](2) = 0,B8(16)
+d.) 1,111010(2) = 1,72(8)
+e.) 1001,1011(2) = 9,B(16)
+
+------------------------------------------------------------------------
+3.a) JAVA
+import java.util.*;
+
+public class Ex3a {
+    public static String dbin2base(int base, String x) {
+        String[] separado = x.split(",", 2);
+        int inteiro = Integer.parseInt(separado[0]);
+        int decimal = Integer.parseInt(separado[1]);
+        int somaInt = 0;
+        int mult;
+        double pot;
+        double somaDec = 0;
+
+        for(int i = 0; i < separado[0].length(); i++, inteiro /= 10){
+            mult = inteiro % 10;
+            pot = Math.pow(2, i);
+            somaInt += (mult * pot);
+        }
+
+
+        for(int i = 0, j = separado[1].length(); i < separado[1].length(); i++, decimal /= 10, j--){
+            mult = decimal % 10;
+            pot = Math.pow(2, -1*j);
+            somaDec += (mult * pot);
+        }
+
+        int[] decBase = new int[8];
+        double aux;
+        
+        for(int i = 0; i < decBase.length; i++){
+            aux = (somaDec * base);
+            decBase[i] = (int) aux;
+            somaDec = aux - (int)aux;
+        }
+
+        String resposta = "";
+        int i;
+
+        if (base == 16 && somaInt >= 10) { // caso seja maior de 10 imprime letra na base 16
+            somaInt = 65 + somaInt - 10;      // posição na tabela ASCII
+            char aux2 = (char) somaInt;
+            resposta += aux2;
+        } else
+        resposta += somaInt; 
+        
+        resposta += ",";
+        for(i = 0; i < decBase.length; i++){
+            if (base == 16 && decBase[i] >= 10) { // caso seja maior de 10 imprime letra na base 16
+                decBase[i] = 65 + decBase[i] - 10;      // posição na tabela ASCII
+                char aux2 = (char) decBase[i];
+                resposta += aux2;
+            } else
+            resposta += decBase[i]; 
+        }
+
+        return resposta;
+    }
+
+    public static void main(String[] args){
+        String[] bin = {"11,111100","0,101001","0,101110","1,111010","1001,1011"};
+        int[] base = {4,8,16,8,16};
+
+        for(int i = 0; i < 5; i++){
+            System.out.println(dbin2base(base[i], bin[i]));
+        } 
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+QUESTÃO 4
+Fazer as conversões de base entre as bases indicadas:
+DICAS: Para uma mesma base ou usar agrupamentos ou desagrupamentos.
+Para conferir, compare os valores decimais equivalentes.
+
+a.) 0,312(4) = 0,110110(2)
+b.) 0,3A2(16) = 0,032202(4)
+c.) 0,735(8) = 0,111011101(2)
+d.) 4,360(8) = 100,01111(2) = 10,132(4) DICA: Converter para binário primeiro, depois para a base 4.
+e.) C,B70(16) = 1100,10110111(2) = 30,2313(4) DICA: Converter diretamente por desagrupamento.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+QUESTÃO 5
+Fazer as operações indicadas:
+a.) 111,11(2) + 11,101(2) = 1011,011(2)
+b.) 1001,101(2) - 10,01(2) = 1001,011(2) (OBS.: Colocar operandos do mesmo tamanho)
+c.) 100,101(2) * 11,11(2) = 1 0001,01011(2) (OBS.: Considerar as vírgulas, após operar)
+d.) 10111,111(2) / 10,11(2) = 1000(2)
+e.) 1101101(2) % 1001(2) = 1(2) (OBS.: Considerar resto de divisão inteira (%))
+DICA: Para conferir o resultado, converter para a base 10.
+
+
+
+
+
+
+

@@ -1,0 +1,86 @@
+#! /usr/bin/vvp
+:ivl_version "10.3 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "vhdl_sys";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_0x7fffc3407200 .scope module, "a4" "a4" 2 6;
+ .timescale 0 0;
+v0x7fffc343ab70_0 .var "P", 0 0;
+v0x7fffc343ac40_0 .var "Q", 0 0;
+v0x7fffc343ad10_0 .net "S", 0 0, L_0x7fffc343b080;  1 drivers
+S_0x7fffc34278b0 .scope module, "POS1" "PoS" 2 10, 2 1 0, S_0x7fffc3407200;
+ .timescale 0 0;
+    .port_info 0 /OUTPUT 1 "S"
+    .port_info 1 /INPUT 1 "P"
+    .port_info 2 /INPUT 1 "Q"
+L_0x7fffc343ae10 .functor NOT 1, v0x7fffc343ab70_0, C4<0>, C4<0>, C4<0>;
+L_0x7fffc343af00 .functor AND 1, L_0x7fffc343ae10, v0x7fffc343ac40_0, C4<1>, C4<1>;
+L_0x7fffc343b010 .functor AND 1, v0x7fffc343ab70_0, v0x7fffc343ac40_0, C4<1>, C4<1>;
+L_0x7fffc343b080 .functor OR 1, L_0x7fffc343af00, L_0x7fffc343b010, C4<0>, C4<0>;
+v0x7fffc3427a80_0 .net "P", 0 0, v0x7fffc343ab70_0;  1 drivers
+v0x7fffc343a300_0 .net "Q", 0 0, v0x7fffc343ac40_0;  1 drivers
+v0x7fffc343a3c0_0 .net "S", 0 0, L_0x7fffc343b080;  alias, 1 drivers
+v0x7fffc343a460_0 .net *"_s0", 0 0, L_0x7fffc343ae10;  1 drivers
+v0x7fffc343a540_0 .net *"_s2", 0 0, L_0x7fffc343af00;  1 drivers
+v0x7fffc343a670_0 .net *"_s4", 0 0, L_0x7fffc343b010;  1 drivers
+S_0x7fffc343a7d0 .scope begin, "main" "main" 2 16, 2 16 0, S_0x7fffc3407200;
+ .timescale 0 0;
+S_0x7fffc343a9a0 .scope begin, "start" "start" 2 12, 2 12 0, S_0x7fffc3407200;
+ .timescale 0 0;
+    .scope S_0x7fffc3407200;
+T_0 ;
+    %fork t_1, S_0x7fffc343a9a0;
+    %jmp t_0;
+    .scope S_0x7fffc343a9a0;
+t_1 ;
+    %pushi/vec4 1, 1, 1;
+    %store/vec4 v0x7fffc343ab70_0, 0, 1;
+    %pushi/vec4 1, 1, 1;
+    %store/vec4 v0x7fffc343ac40_0, 0, 1;
+    %end;
+    .scope S_0x7fffc3407200;
+t_0 %join;
+    %end;
+    .thread T_0;
+    .scope S_0x7fffc3407200;
+T_1 ;
+    %fork t_3, S_0x7fffc343a7d0;
+    %jmp t_2;
+    .scope S_0x7fffc343a7d0;
+t_3 ;
+    %vpi_call 2 18 "$display", "Produto da Soma" {0 0 0};
+    %vpi_call 2 20 "$display", " P  Q  PoS( 1, 2, 3, 7 ) " {0 0 0};
+    %vpi_call 2 21 "$monitor", "%2b %2b =  %2b", v0x7fffc343ab70_0, v0x7fffc343ac40_0, v0x7fffc343ad10_0 {0 0 0};
+    %delay 1, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x7fffc343ab70_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x7fffc343ac40_0, 0, 1;
+    %delay 1, 0;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x7fffc343ab70_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x7fffc343ac40_0, 0, 1;
+    %delay 1, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x7fffc343ab70_0, 0, 1;
+    %pushi/vec4 0, 0, 1;
+    %store/vec4 v0x7fffc343ac40_0, 0, 1;
+    %delay 1, 0;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x7fffc343ab70_0, 0, 1;
+    %pushi/vec4 1, 0, 1;
+    %store/vec4 v0x7fffc343ac40_0, 0, 1;
+    %end;
+    .scope S_0x7fffc3407200;
+t_2 %join;
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "4a_copy.v";

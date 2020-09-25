@@ -1,0 +1,136 @@
+Anna Puga Campos Rodrigues - 694370
+EXERCÍCIO 5
+--------------------------------------------------------------------------------------------------------
+5.
+a.) “PUC-Minas” = 50 55 43 2D 4D 69 6E 61 73 (16_ASCII)
+b.) “2020-2” = 32 30 32 30 2D 32 (16_ASCII)
+c.) “Brasil” = 01000010 01110010 01100001 01110011 01101001 01101100 (2_ASCII)
+d.) 116 157 151 164 145(8) = "Noite" X(ASCII)
+e.) 42 2E 48 2E 2D 4D 47(16) = "B.H.-MG" X(ASCII)
+--------------------------------------------------------------------------------------------------------
+5.a)
+
+    /**
+    Arquitetura de Computadores I - Guia_01.
+    Nome: Anna Puga Campos Rodrigues; Matricula: 694370
+    */
+    	
+public class Conversao5a {
+    public static void dec2base(int base, int d) {
+        int aux = d;
+        int j;
+        if(base == 2)
+            j = 8;
+        else
+            j = 2;
+        int[] b = new int[j];
+
+        for (int i = j-1; d > 0; d = d / base, i--) { // invertendo a posição do vetor que guarda os
+            b[i] = d % base;                        // restos que formam o numero decimal
+        }
+
+        // impressao
+        for (int i = 0; i < j; i++) {
+            if (base == 16 && b[i] >= 10) { // caso seja maior de 10 imprime letra na base 16
+                b[i] = 65 + b[i] - 10;      // posição na tabela ASCII
+                char aux2 = (char) b[i];
+                MyIO.print(aux2);
+            } else
+                MyIO.print(b[i]);
+        }
+    }
+
+    public static int base2dec(int base, int d){
+        int aux = 0;
+        int aux2 = d;
+        
+        for(int i = 0; i <= 12; i++){
+            aux += (d%10)*Math.pow(base,i); //calculo da soma das potencias
+            d = d/10;                       //que formam o numero decimal
+        }
+
+        return aux;
+    
+    }
+
+    public static void ASCII2hex(String x, int base){
+        int[] vetor = new int[x.length()];
+        MyIO.print(x + "[10] = ");
+        for(int i = 0; i < x.length(); i++){
+            vetor[i] = x.charAt(i);
+        }
+        for(int i = 0; i < x.length(); i++){
+            dec2base(base, vetor[i]);
+            System.out.print(" ");
+        }
+        MyIO.println("[" + base + "]");
+        
+    }
+    public static void hex2ASCII(int[] x, int base){
+        for(int i = 0; i < x.length; i++){
+            MyIO.print(x[i] + " ");
+        }
+        MyIO.print("[" + base + "] = '");
+        for(int i = 0; i < x.length; i++){
+            int A = base2dec(base, x[i]);
+            char B = (char) A;
+            MyIO.print(B);
+        }
+        MyIO.print("'");
+    }
+
+    public static void main(String[] args){
+        ASCII2hex("PUC-Minas", 16);
+        ASCII2hex("2020-2", 16);
+        ASCII2hex("Brasil", 2);
+        int[] V =  {116, 157, 151, 164, 145};
+        hex2ASCII(V, 8);
+        System.out.println();  
+    }
+}
+--------------------------------------------------------------------------------------------------------
+5.b)
+__________________________________________________________________________________________	
+|       PUC-Minas	 |x(16)            50 55 43 5F 4D 69 6E 61 73			  |
+|________________________|________________________________________________________________|
+|         2020-2	 |x(16)                32 30 32 30 5F 32                          |	
+|________________________|________________________________________________________________|
+|        Brasil		 |X(2)    01000010 01110010 01100001 01110011 01101001 01101100   | 
+|________________________|________________________________________________________________|
+|   74 9D 97 A4 91 (8)	 |X(ASCII)                   Noite				  | 
+|________________________|________________________________________________________________|
+|42 2E 48 2E 2D 4D 47(16)|X(ASCII)                  B.H.-MG  				  |
+|________________________|________________________________________________________________|
+--------------------------------------------------------------------------------------------------------
+5.c)
+/**
+    Arquitetura de Computadores I - Guia_01.
+    Nome: Anna Puga Campos Rodrigues; Matricula: 694370
+*/
+module Guia_0105;
+// define data
+reg [0:8][7:0] s = "PUC-Minas"; // 9 characters (8 bits)
+// actions
+initial
+begin : main
+$display ( "s = [%2x] [%2x] [%2x] [%2x] [%2x] [%2x] [%2x] [%2x] [%2x]" , s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8] );
+s = "2020-2";
+$display ( "s = [%2x] [%2x] [%2x] [%2x] [%2x] [%2x]" , s[3], s[4], s[5], s[6], s[7], s[8] );
+s = "Brasil";
+$display ( "s = [%b] [%8b] [%8b] [%8b] [%8b] [%8b]" , s[3], s[4], s[5], s[6], s[7], s[8] );
+s[0] = 12'o116;
+s[1] = 12'o157;
+s[2] = 12'o151;
+s[3] = 12'o164;
+s[4] = 12'o145;
+$display ( "s = %s%s%s%s%s" , s[0], s[1], s[2], s[3], s[4] );
+s[0] = 12'h42;
+s[1] = 12'h2e;
+s[2] = 12'h48;
+s[3] = 12'h2e;
+s[4] = 12'h2d;
+s[5] = 12'h4d;
+s[6] = 12'h47;
+$display ( "s = %s%s%s%s%s%s%s" , s[0], s[1], s[2], s[3], s[4], s[5], s[6] );
+end // main
+endmodule // Guia_0105
